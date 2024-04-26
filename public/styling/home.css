@@ -1,0 +1,671 @@
+body {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    height: 100vh;
+    gap: 0.5rem;
+    justify-content: space-between;
+}
+
+.main-page-heading {
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--main-color);
+    border: 1px solid var(--main-color);
+    border-radius: 4px;
+    box-shadow: 0 4px 4px var(--shadow-color);
+}
+    .page-logo {
+        width: fit-content;
+        background-color: white;
+        padding: 1rem 2rem;
+        border-radius: 4px;
+    }
+        .page-logo h1 {
+            text-shadow: -1px 1px white, -3px 3px 3px var(--shadow-color);
+        }
+    .page-login-indication {
+        align-self: center;
+        width: fit-content;
+        padding: 1rem;
+        color: white;
+    }
+    .page-login-indication p {
+            font-size: 1.1rem;
+            text-shadow: -1px 1px var(--main-color), -1px 1px 3px black;
+        }
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+    .home-main {
+        display: flex;
+        height: 78vh;
+    }
+        .passwords-view {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            width: 75vw;
+            height: 100%;
+            padding: 1rem;
+            border: 1px solid var(--main-color);
+            border-radius: 4px;
+            box-shadow: 0px 4px 4px var(--shadow-color);
+            Overflow-y:scroll;
+        }
+            .no-passwords-div {
+                display: flex;
+                align-items: center;
+                justify-content: space-around;
+                width: 100%;
+            
+            }
+            
+            .password-card {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                width: 9rem;
+                height: 9rem;
+                border: 1px solid var(--shadow-color);
+                border-radius: 4px;
+                box-shadow: -3px 3px 3px var(--shadow-color);
+            }
+                .password-card-initial {
+                    display: flex;
+                    align-content: center;
+                    align-items: center;
+                    justify-content: space-around;
+                    height: 55%;
+                    background-color: red;
+                }
+                    .password-card-initial > p{
+                        font-size: 2rem;
+                        color: white;
+                        font-weight: bold;
+                    }
+                .password-card-details {
+                    display: flex;
+                    flex-direction: column;
+                    gap: .5rem;
+                    align-items: center;
+                    padding: 0.5rem;
+                    justify-content: space-evenly;
+                    height: 50%;
+                }
+                    .password-card-btn {
+                        position: relative;
+                        width: fit-content;
+                        background-color: white;
+                        padding: 0.2rem 0.3rem;
+                        border: 1px solid var(--main-color);
+                        border-radius: 4px;
+                        box-shadow: 0 3px 4px var(--main-color);
+                    }
+                    .password-card-btn:hover {
+                        cursor: pointer;
+                    }
+                    .password-card-btn:active {
+                        top: 1px;
+                        box-shadow: 0 1px 2px var(--main-color);
+                    }
+
+        .operations-view {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 23vw;
+            padding: 1rem;
+            margin-left: 2rem;
+            border: 1px solid var(--main-color);
+            border-radius: 4px;
+            box-shadow: 0px 4px 4px var(--shadow-color);
+        }
+            .main-page-operations {
+                display: flex;
+                flex-direction: column;
+                gap: 2rem;
+            }
+                .operation-search {
+                    width: 100%;
+                    height: 2.5rem;
+                    padding: 0 .5rem;
+                    border-radius: 4px;
+                    outline: none;
+                    border: 1px solid var(--shadow-color);
+                    box-shadow: 0px 0px 4px var(--shadow-color);
+                }
+                .operation-search:focus-within {
+                    background-color: white;
+                    box-shadow: 1px 4px var(--main-color), -1px 4px var(--main-color);
+                    border: 1px solid var(--main-color);
+                }
+                    .no-search-result {
+                        display: none;
+                    }
+                    .no-search-result.active {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 100%;
+                    }
+                    .operation-creation-div,
+                    .operation-receive-div,
+                    .operation-deletion-div {
+                        align-self: center;
+                    }
+                    .operation-deletion-div {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 2rem;
+                    }
+                    .operation-create,
+                    .operation-delete,
+                    .operation-receive {
+                        align-self: center;
+                        position: relative;
+                        width: 10rem;
+                        height: 2.5rem;
+                        font-size: 1rem;
+                        color: white;
+                        background-color: white;
+                        border-radius: 4px;
+                        border: none;
+                    }
+                    .operation-create {
+                        background-color: green;
+                        box-shadow: -3px 3px white, -4px 4px 3px green;
+                    }
+                    .operation-receive {
+                        background-color: yellow;
+                        box-shadow: -3px 3px white, -4px 4px 3px yellow;
+                    }
+                        .received-passwords {
+                            display: flex;
+                            justify-content: center;
+                            flex-direction: column;
+                            padding: 1rem 0;
+                            text-align: center;
+                            cursor: pointer;
+                        }
+                            .received-password-name {
+                                margin: 0.3rem 0;
+                            }
+                            .received-password-name:hover {
+                                font-weight: bold;
+                            }
+                            .received-password-name + hr {
+                                width: 7rem;
+                                align-self: center;
+                            }
+                    .operation-delete {
+                        background-color: red;
+                        box-shadow: -3px 3px white, -4px 4px 3px red;
+                    }
+                        .operation-create:active {
+                            top: 1px;
+                            left: -1px;
+                            box-shadow: -1px 1px white, -2px 2px 3px green;
+                        }
+                        .operation-create:hover,
+                        .operation-receive:hover,
+                        .operation-delete:hover {
+                            cursor: pointer;
+                        }
+                        .operation-delete:active {
+                            top: 1px;
+                            left: -1px;
+                            box-shadow: -1px 1px white, -2px 2px 3px red;
+                        }
+
+                        .delete-options {
+                            display: none;
+                        }
+                        .delete-options.active {
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: space-between;
+                            gap: 1rem;
+                        }
+                            .delete-option-main {
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                gap: 1rem;
+                            }
+                                .delete-option-indicator,
+                                .cancel-received-passwords {
+                                    font-size: 1.2rem;
+                                }
+                                .cancel-received-passwords {
+                                    text-align: center;
+                                    margin-top: 1.2rem;
+                                }
+                                .cancel-received-passwords:hover {
+                                    cursor: pointer;
+                                }
+                                .select-delete-main-account {
+                                    align-self: center;
+                                    width: 1rem;
+                                    height: 1rem;
+                                    border: 1px solid red;
+                                    box-shadow: -1px 1px white, -2px 2px 2px red;
+                                }
+                                .select-delete-main-account:hover, .downwards-arrow:hover {
+                                    cursor: pointer;
+                                }
+                                .select-delete-main-account:active {
+                                    background-color: red;
+                                }
+                                .delete-main-account, .delete-option-password, .delete-password-account {
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 0.5rem;
+                                }
+                                .delete-options-seperator {
+                                    width: 6rem;
+                                    border: 1px solid var(--shadow-color);
+                                    box-shadow: 0px 2px 4px var(--shadow-color);
+                                }
+
+                                .downwards-arrow {
+                                    font-size: 1.7rem;
+                                    color: red;
+                                }
+                                .delete-option-password {
+                                    flex-direction: column;
+                                }
+                                    .delete-account-name:hover {
+                                        cursor: pointer;
+                                        font-weight: bold;
+                                    }
+                                    .delete-password-accounts-list {
+                                        display: flex;
+                                        flex-direction: column;
+                                        gap: 0.3rem;
+                                        Overflow-y:scroll;
+                                    }
+                                    .delete-password-accounts-list-item > hr,
+                                    .received-passwords >  hr {
+                                        border: 1px solid var(--shadow-color);
+                                        box-shadow: 0px 2px 4px var(--shadow-color);
+                                    }
+                            .delete-cancel:hover {
+                                cursor: pointer;
+                            }
+                .operation-log-out {
+                    align-self: center;
+                    font-size: 1.3rem;
+                    font-weight: bold;
+                    text-decoration: none;
+                    color: black;
+                    background-image: linear-gradient(90deg, red, blue);
+                    -webkit-background-clip: text;
+                    background-clip: text;
+                }
+                .operation-log-out:hover {
+                    color: transparent;
+                }
+
+
+/* styling for modal form when user creates account */
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: 500ms ease-in-out;
+    /* border: 1px solid black; */
+    border-radius: 5px;
+    z-index: 10;
+    background-color: white;
+    width: 45%;
+    display: flex;
+    flex-direction: column;
+}
+.modal.active {
+    transform: translate(-50%, -50%) scale(1);
+}
+    .close-modal {
+        display: flex;
+        flex-direction: row-reverse;
+        padding: 0 0.4rem;
+    }
+        .close-modal > p {
+            font-size: 1.7rem;
+            cursor: pointer;
+        }
+
+    /* for every form there is on the application this styling will apply */
+    .form-fields {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 1.4rem;
+        padding: 0 1.4rem;
+    }
+        .form-attribute {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+            .form-attribute > input {
+                width: 100%;
+                height: 1.5rem;
+                padding: 1rem 0.5rem;
+            }
+    /* end of form styling */
+
+        .submit-button-div {
+            display: flex;
+            justify-content: center;
+            margin-top: 1.3rem;
+            margin-bottom: 1.3rem;
+        }
+            .submit-button-div button {
+                width: 5rem;
+                height: 2rem;
+            }
+
+#overlay {
+    position: fixed;
+    transition: 550ms ease-in-out;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,.5);
+    pointer-events: none;
+}
+#overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+/* end of styling for modal form when user creates account */
+
+
+
+/* styling of modal for result when user attempts to create account */
+.result-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: 500ms ease-in-out;
+    /* border: 1px solid black; */
+    border-radius: 5px;
+    z-index: 11;
+    background-color: white;
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+    padding: 1.5rem;
+}
+.result-modal.active {
+    transform: translate(-50%, -50%) scale(1);
+}
+    .options {
+        display: flex;
+        gap: 1.5rem;
+    }
+        .options > button {
+            display: none;
+            width: 5rem;
+            height: 2rem;
+        }
+        .options > button.active {
+            display: block;
+        }
+
+#result-overlay {
+    position: fixed;
+    transition: 550ms ease-in-out;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    background-color: rgba(0,0,0,.5);
+    pointer-events: none;
+}
+#result-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+/* end of styling of modal for result when user attempts to create account */
+
+
+
+/* styling of password account modal for when user clicks password button */
+.password-account-modal {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: 500ms ease-in-out;
+    /* border: 1px solid black; */
+    width: 45%;
+    height: 45%;
+    border-radius: 5px;
+    z-index: 10;
+    background-color: white;
+}
+.password-account-modal.active {
+    transform: translate(-50%, -50%) scale(1);
+}
+    .close-password-account-modal {
+        display: flex;
+        flex-direction: row-reverse;
+        padding: 0 0.7rem;
+    }
+        .close-password-account-modal > p {
+            font-size: 1.7rem;
+            cursor: pointer;
+        }
+
+    .password-account-main {
+        display: flex;
+        height: 100%;
+    }
+        .password-account-name {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30%;
+            background-color: aqua;
+        }
+            .password-account-initial {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: red;
+                height: 80%;
+                width: 100%;
+            }
+                .initial {
+                    font-size: 1.5rem;
+                    font-weight: bold;
+                    color: white;
+                }
+                .password-account-fullname {
+                    display: flex;
+                    background-color: white;
+                    width: 100%;
+                    height: 20%;
+                    justify-content: center;
+                    padding: .8rem 0;                
+                }
+
+        .password-account-details {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 70%;
+            padding: 0 1.4rem;
+        }   
+            .password-account-details > form {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-evenly;
+                gap: 0.3rem;
+            }
+                .password-account-details > form > .form-fields {
+                        padding: 0;
+                    }
+                .password-account-details > form > .password-manipulation {
+                    margin-top: 1rem;
+                }
+                    .password-account-details > form > .password-manipulation span:hover {
+                        cursor: pointer;
+                    }
+            .password-account-modal-button-options {
+                display: flex;
+                justify-content: space-between;
+                gap: 2rem;
+                margin: 2rem 0 0.7rem;
+            }
+                .password-account-button {
+                    width: 5rem;
+                    height: 2rem;
+                    background-color: var(--main-color);
+                    box-shadow: -3px 3px white, -4px 4px 4px var(--main-color);
+                    border: none;
+                    border-radius: 4px;
+                    color: white;
+                }
+                .password-account-button:hover {
+                    cursor: pointer;
+                }
+#password-account-overlay {
+    position: fixed;
+    transition: 550ms ease-in-out;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,.5);
+    pointer-events: none;
+}
+#password-account-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.password-result-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: 500ms ease-in-out;
+    /* border: 1px solid black; */
+    border-radius: 5px;
+    z-index: 11;
+    background-color: white;
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+    padding: 1.5rem;
+}
+.password-result-modal.active {
+    transform: translate(-50%, -50%) scale(1);
+}
+#password-result-overlay {
+    position: fixed;
+    transition: 550ms ease-in-out;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    background-color: rgba(0,0,0,.5);
+    pointer-events: none;
+}
+#password-result-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+/* end of styling of password account modal for when user clicks password button */
+
+
+
+/* styling for delete modal */
+.delete-result-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: 500ms ease-in-out;
+    /* border: 1px solid black; */
+    border-radius: 5px;
+    z-index: 10;
+    background-color: white;
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+    padding: 1.5rem;
+}
+.delete-result-modal.active {
+    transform: translate(-50%, -50%) scale(1);
+}
+    .options {
+        display: flex;
+        gap: 1.5rem;
+    }
+        .options > button {
+            display: none;
+            width: 5rem;
+            height: 2rem;
+        }
+        .options > button.active {
+            display: block;
+        }
+
+#delete-result-overlay {
+    position: fixed;
+    transition: 550ms ease-in-out;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,.5);
+    pointer-events: none;
+}
+#delete-result-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+/* end of styling for delete modal */
+
+
+
+/* hides elements that contains the hidden class */
+.hide {
+    display: none;
+}
+/* end of hiding elements that contains the hidden class */
+
+
+
+/* footer styling */
+footer {
+    align-self: center;
+    text-shadow: -1px 1px var(--shadow-color);
+}
+/* end of footer styling */

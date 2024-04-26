@@ -1,0 +1,61 @@
+/* create colours for entire page with variables */
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --main-color: #FF5E00;
+    --shadow-color: rgba(0,0,0,0.3);
+}
+
+.paper-stack-form {
+    position: relative;
+    display: block;
+    margin: 0 auto;
+    width: 70vw;
+    height: 70vh;
+    padding: 1rem;
+    background-color: white;
+    box-shadow: -1pt 5pt 7pt 1pt var(--shadow-color);
+    border: 1px solid var(--shadow-color);
+    border-radius: 4px;
+}
+.paper-stack-form > form {
+    background-color: white;
+}
+    .paper-stack-form::before,
+    .paper-stack-form::after {
+        content: "";
+        position: absolute;
+        display: block;
+        width: 70vw;
+        height: 70vh;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: white;
+        border: 1px solid var(--shadow-color);
+        border-radius: 4px;
+        transform: scale(0.9) translate(0,0);
+        transition: all ease 0.3s;
+        z-index: -1;
+    }
+    .paper-stack-form:hover::before {
+        transform: scale(0.96) translate(0, -14pt);
+    }
+    .paper-stack-form:hover::after {
+        transform: scale(0.92) translate(0, -28pt);
+        z-index: -2;
+    }
+
+/* error field within forms */
+.error-field {
+    color: red;
+    text-shadow: 0 0 black;
+    font-size: 1rem;
+}
+/* end of error field within forms */

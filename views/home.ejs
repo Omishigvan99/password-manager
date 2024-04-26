@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Manager</title>
+    <link rel="stylesheet" href="/styling/global.css">
+    <link rel="stylesheet" href="/styling/home.css">
+    <script defer src="/scripts/modal.js"></script>
+    <script defer src="/scripts/requests.js"></script>
+    <script defer src="/scripts/jquery/jquery-3.6.1.min.js"></script>
+</head>
+<body>
+    <div class="main-content">
+        <header class="main-page-heading">
+            <div class="page-logo">
+                <h1>Password Manager</h1>
+            </div>
+            <div class="page-login-indication">
+                <p>logged in as <span class="username"><%= user.email %></span></p>
+            </div>
+        </header>
+    
+        <div class="home-main">
+            <section class="passwords-view">
+                <div class="no-search-result">no result found</div>
+                <% if(user.accounts.length) {%>
+                    <% user.accounts.map(function(account) { %>
+                        <div class="password-card">
+                            <div class="password-card-initial">
+                                <p> <%= account.accountName[0] %> </p>
+                            </div>
+                            <div class="password-card-details">
+                                <p class="password-card-name"> <%= account.accountName %> </p>
+                                <button class="password-card-btn">Password</button>
+                                <%- include("modals/update-password-account-modal", { account: account }); %>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else {%>
+                    <div class="no-passwords-div">
+                        <p class="no-passwords-text">No Passwords to be Shown</p>
+                    </div>
+                <% } %>
+            </section>
+        
+            <section class="operations-view">
+                <div class="main-page-operations">
+                    <input type="text" class="operation-search" placeholder="search">
+                    <div class="operation-creation-div">
+                        <button class="operation-create open-modal">Create</button>
+                        <%- include("modals/create-password-account-modal"); %>
+                    </div>
+                    <div class="operation-receive-div">
+                        <button class="operation-receive">Receive</button>
+                        <div class="received-passwords hide"></div>
+                        <p class="cancel-received-passwords hide">cancel</p>
+                    </div>
+                    <div class="operation-deletion-div">
+                        <button class="operation-delete">Delete</button>
+                        <div class="delete-options">
+                            <div class="delete-option-main">
+                                <div class="delete-main-account">
+                                    <div class="select-delete-main-account"></div>
+                                    <p class="delete-option-indicator">Main Account</p>
+                                </div>
+                                <hr class="delete-options-seperator"/>
+                                <div class="delete-option-password">
+                                    <div class="delete-password-account">
+                                        <div class="downwards-arrow">&darr;</div>
+                                        <p class="delete-option-indicator">Password Account</p>
+                                    </div>
+                                    <ul class="delete-password-accounts-list"></ul>
+                                </div>
+                                <%- include("modals/delete-password-account-modal"); %>
+                            </div>
+                            <p class="delete-cancel delete-option-indicator">cancel</p>
+                        </div>
+                    </div>
+                </div>
+                <a href="/api/logout/users" class="operation-log-out">log out</a>
+            </section>
+
+        </div>
+    </div>
+<script>
+    // password card values
+    const passwordsView = document.querySelector(".passwords-view");
+    const [...accountPasswordCards] = document.querySelectorAll(".password-card");
+    const [...accountPasswordCardNames] = document.querySelectorAll(".password-card-name");
+
+    // logout button
+    const logOutBtn = document.querySelector(".operation-log-out");
+
+
+    
+// create password account section
+
+    const openPasswordModal = document.querySelector(".open-modal");
+    const createButton = document.querySelector(".create-password");
+
+    // form for modal
+    let createPasswordForm = document.querySelector(".modal > form");
+    
+    // error fields
+    let accountNameError = document.querySelector(".account-name-error");
+    let accountUsernameError = document.querySelector(".email-error");
+    let accountPasswordError = document.querySelector(".password-error");
+    
+    // text within the modal
+    let resultModalText = document.querySelector(".result-text");
+
+    //all the buttons within the resultModal
+    const [...resultModalBtns] = document.querySelectorAll(".close-result-modal");
+
+
+
+    // fetch request to create password account
+    createButton.addEventListener("click", async function(event) {
+        event.preventDefault();
+    
+        
+        //reset error fields to nothing
+        accountNameError.textContent = "";
+        accountUsernameError.textContent = "";
+        accountPasswordError.textContent = "";
+        
+        //default text within result modal
+        resultModalText.textContent = "Loading...";
+        
+        //makes all result-modalbuttons display none
+        activeClassRemoval();
+
+        //getting form fields
+        let accountName = createPasswordForm.account_name.value;
+        let accountUsername = createPasswordForm.email.value;
+        let accountPassword = createPasswordForm.password.value;
+
+        if(!accountName) {
+            accountNameError.textContent = "no account name provided";
+            return;
+        }
+        if(!accountUsername) {
+            accountUsernameError.textContent = "no email/username provided";
+            return;
+        }
+        if(!accountPassword) {
+            accountPasswordError.textContent = "no password provided";
+            return;
+        }
+
+        let response = await createPasswordAccount(accountName, accountUsername, accountPassword);
+
+        if(response.error) {
+            if(response.error.includes("account already exists, update instead?")) {
+                resultModalText.textContent = "account already exists, update instead?";
+                resultModalBtns[0].classList.add("active");
+                resultModalBtns[2].classList.add("active");
+            }
+        } else if(response) {
+            resultModalText.textContent = "success!";
+            resultModalBtns[1].classList.add("active");
+        }
+
+        //reload page when password account is created and user clicks "ok"
+        resultModalBtns[1].addEventListener("click", pageRefresh);
+    });
+    
+    //update the password account when the result-yes button is clicked
+    resultModalBtns[0].addEventListener("click", async function() {
+        //default text within result modal
+        resultModalText.textContent = "Loading...";
+
+        //makes all result-modalbuttons display none
+        activeClassRemoval();
+
+        let accountName = createPasswordForm.account_name.value;
+        let accountUsername = createPasswordForm.email.value;
+        let accountPassword = createPasswordForm.password.value;
+        
+        let response = await updatePasswordAccount(accountName, accountUsername, accountPassword);
+
+        if(response.error) {
+            resultModalText.textContent = response.error;
+        } else if(response){
+            resultModalText.textContent = "update success!";
+            resultModalBtns[1].classList.add("active");;
+        }
+    });
+
+// end of fetch request to create password account
+
+
+
+// view password account section
+
+    let [...passwordAccountForm] = document.querySelectorAll(".password-account-details > form");
+
+    //save buttons within password account modal
+    const [...savePasswordAccountBtns] = document.querySelectorAll(".open-password-result-modal");
+
+    let [...passwordResultModalBtns] = document.querySelectorAll(".close-password-result-modal");
+
+
+
+    //save updated password account on password account modal when save button is clicked
+    savePasswordAccountBtns.map(function(item, index) {
+        let passwordResultText = document.querySelectorAll(".password-result-text");        
+
+        item.addEventListener("click", function() {
+            passwordResultText[index].textContent = "Loading...";
+            passwordResultModalBtns[index].addEventListener("click", function() { location.assign("/"); });
+
+            let accountName = document.querySelectorAll(".fullname")[index].textContent.trim();
+            let accountUsername = passwordAccountForm[index].username.value;
+            let accountPassword = passwordAccountForm[index].password.value;
+
+            let response = updatePasswordAccount(accountName, accountUsername, accountPassword);
+
+            if(response.error) {
+                passwordResultText[index].textContent = data.error;
+            } else if(response) {
+                passwordResultText[index].textContent = "update success!";
+                passwordResultModalBtns[index].classList.add("active");
+            }
+        });
+    });
+
+// end of view password account section
+
+
+    
+// search password accounts section
+
+    const searchInput = document.querySelector(".operation-search");    
+    const noSearchResult = document.querySelector(".no-search-result");
+
+    searchInput.addEventListener("keyup", function() {
+        //removes the active class so the no search result text won't show
+        noSearchResult.classList.remove("active");
+
+        accountPasswordCards.map(function(item) {
+            item.classList.remove("hide");
+        });
+
+        let accountName = searchInput.value;
+
+        let match = accountName.match(/\s*/);
+        let regexp = new RegExp(`^${ accountName }.*`, "i");
+
+        if(match[0] !== accountName) {
+            let result = accountPasswordCards.filter(function(item, index) {
+                if(!regexp.test(accountPasswordCardNames[index].textContent.trim())) {
+                    return accountPasswordCards[index];
+                }
+            }).map(function(item) {
+                item.classList.add("hide");
+            });
+            if(result.length === accountPasswordCards.length) {
+                noSearchResult.classList.add("active");
+            }
+        }
+    });
+
+// end of search password accounts section
+
+// receive section
+    const receiveSection = document.querySelector(".operation-receive-div");
+    const receiveBtn = document.querySelector(".operation-receive");
+    const receivedPasswords = document.querySelector(".received-passwords");
+    const closeReceivedPasswords = document.querySelector(".cancel-received-passwords");
+
+    receiveBtn.addEventListener("click", function(event) {
+        deleteBtn.classList.add("hide");
+        openPasswordModal.classList.add("hide");
+        receivedPasswords.classList.remove("hide");
+        closeReceivedPasswords.classList.remove("hide");
+    });
+
+    closeReceivedPasswords.addEventListener("click", function() {
+        this.classList.add("hide");
+        receivedPasswords.classList.add("hide");
+        deleteBtn.classList.remove("hide");
+        openPasswordModal.classList.remove("hide");
+    });
+
+// delete section
+
+    const deleteBtn = document.querySelector(".operation-delete");
+    const deleteOptions = document.querySelector(".delete-options");
+    let deleteResultText = document.querySelector(".delete-result-text");
+    const deleteUserAccountSection = document.querySelector(".delete-main-account");
+    const deletePasswordAccountSection = document.querySelector(".delete-option-password");
+    let deletePasswordAccountsList = document.querySelector(".delete-password-accounts-list");
+    
+
+
+    // all of the buttons within the delete modal
+    let allModalDeleteBtns = [
+            document.querySelector(".delete-yes"), 
+            document.querySelector(".delete-ok"), 
+            document.querySelector(".delete-no")
+        ];
+
+    // the password card that's going to be deleted
+    let PasswordCardToBeDeleted = "";
+
+    //delete modal button functionality
+    deleteBtn.addEventListener("click", function() {
+        openPasswordModal.classList.add("hide");
+        receiveSection.classList.add("hide");
+        logOutBtn.classList.add("hide");
+        deleteOptions.classList.add("active");
+
+        // cancel delete
+        const cancelDelete = document.querySelector(".delete-cancel");
+
+        cancelDelete.addEventListener("click", function() {
+            openPasswordModal.classList.remove("hide");
+            receiveSection.classList.remove("hide");
+            logOutBtn.classList.remove("hide");
+            deleteOptions.classList.remove("active");
+            deletePasswordAccountsList.textContent = "";
+        });
+    });
+
+// delete password accounts request
+    deletePasswordAccountSection.addEventListener("click", function() {
+
+        // empties delete password account list
+        deletePasswordAccountsList.textContent = ""
+
+        // makes the delete buttons yes and no visible
+        allModalDeleteBtns.map(function(item, index) {
+            if(index !== 1) {
+                item.classList.add("active");
+            }
+        });
+        
+        // gets all the password account names
+        let [...allPasswordAccounts] = document.querySelectorAll(".fullname");
+
+        // creates delete options for user to select from
+        allPasswordAccounts.map(function(item) {
+            let accountNameDivider = document.createElement("li");
+            let accountName = document.createElement("p");
+            let horizontalLine = document.createElement("hr");
+
+            accountName.textContent = item.textContent;
+
+            accountName.classList.add("delete-account-name");
+            accountNameDivider.classList.add("delete-password-accounts-list-item");
+
+            accountNameDivider.appendChild(accountName);
+            accountNameDivider.appendChild(horizontalLine);
+            deletePasswordAccountsList.appendChild(accountNameDivider);
+        });
+
+        let [...allDeletePasswordAccounts] = document.querySelectorAll(".delete-account-name");
+
+        //provides form of assurance to user before deleting password account
+        allDeletePasswordAccounts.map(function(item) {
+            item.addEventListener("click", function() {
+                PasswordCardToBeDeleted = item.textContent.trim();
+                deleteResultText.textContent = `Delete ${ PasswordCardToBeDeleted }?`;
+            });
+        });
+
+        //add delete password account functionality on the yes button
+        allModalDeleteBtns[0].addEventListener("click", function() {
+            if(deletePasswordAccount(PasswordCardToBeDeleted)) {
+                deleteResultText.textContent = "Success!"
+                allModalDeleteBtns[0].classList.remove("active");
+                allModalDeleteBtns[2].classList.remove("active");
+
+                allModalDeleteBtns[1].classList.add("active");
+            }
+        });
+
+        //refreshes entire page when user clicks ok button
+        allModalDeleteBtns[1].addEventListener("click", pageRefresh);
+    });
+
+// end of delete password accounts request
+    
+
+
+// delete user account request
+    deleteUserAccountSection.addEventListener("click", function() {
+        deleteResultText.textContent = "Delete User Account?";
+
+        allModalDeleteBtns[0].classList.add("active");
+        allModalDeleteBtns[2].classList.add("active");
+
+        allModalDeleteBtns[1].classList.remove("active");
+
+        allModalDeleteBtns[0].addEventListener("click", function() {
+            if(deleteUserAccount(username)) {
+                setTimeout(function() {
+                    loginRedirect();
+                }, 1200);
+            }
+        });
+    });
+
+// end of delete user account request
+
+
+
+// end of delete section
+
+// global functions section 
+
+    //refreshes the entire page
+    function pageRefresh() {
+        location.assign("/");
+    }
+
+    //redirects to login page
+    function loginRedirect() {
+        location.assign("/api/login");
+    }
+
+    //removal of active class from buttons so that it's reset when making new requests
+    function activeClassRemoval() {
+        resultModalBtns.map(function(item) {
+            item.classList.remove("active");
+        });
+    }
+
+// end of global functions section 
+</script>
+<script src="/socket.io/socket.io.js"></script>
+<%- include("partials/footer") %>

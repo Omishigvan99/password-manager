@@ -1,0 +1,36 @@
+{
+    "name": "safe-store",
+    "version": "1.0.0",
+    "description": "nodejs password manager",
+    "main": "app.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev-start": "nodemon --env-file=.env app.js",
+        "start": "node --env-file=.env app.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nkululek0/password-manager.git"
+    },
+    "author": "nkululek0",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/nkululek0/password-manager/issues"
+    },
+    "homepage": "https://github.com/nkululek0/password-manager#readme",
+    "devDependencies": {
+        "nodemon": "^2.0.15"
+    },
+    "dependencies": {
+        "bcrypt": "^5.0.1",
+        "cookie-parser": "^1.4.6",
+        "crypto-js": "^4.1.1",
+        "dotenv": "^16.0.0",
+        "ejs": "^3.0.2",
+        "express": "^4.17.3",
+        "jsonwebtoken": "^8.5.1",
+        "mongoose": "^6.2.7",
+        "socket.io": "^4.5.3",
+        "validator": "^13.7.0"
+    }
+}
